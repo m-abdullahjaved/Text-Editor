@@ -1,6 +1,6 @@
 #pragma once
 #include<iostream>
-
+// Node Class used in Stack and String ADT
 class Node {
 public:
 	char data;

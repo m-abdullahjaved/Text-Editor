@@ -3,14 +3,14 @@
 #include <conio.h>
 #include<iomanip>
 
-#include "Stack.h"
-#include "String.h"
+#include "Stack.h"  // Stack ADT
+#include "String.h" // String ADT
 
 using namespace std;
 
-void openFile();
-void newFile();
-void editFile(String&);
+void openFile(); // For Opening Existing File
+void newFile(); // For Creating New File
+void editFile(String&); // For edting Text in File
 
 void mainMenu() {
 	int choice = 0;
