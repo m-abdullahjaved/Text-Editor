@@ -3,11 +3,23 @@
 #include "Node.h"
 
 class Stack {
-private:
-	Node* top;
 public:
+	Node* top;
 	Stack() {
 		top = NULL;
+	}
+	Stack(const Stack& Obj) {
+		top = NULL;
+		Node* temp = Obj.top;
+		Stack Stk;
+		while (temp != NULL) {
+			Stk.push(temp->data);
+			temp = temp->next;
+		}
+		while (!Stk.isEmpty()) {
+			this->push(Stk.peek());
+			Stk.pop();
+		}
 	}
 	~Stack() {
 		delete top;
@@ -35,4 +47,17 @@ public:
 		else
 			return '\0';
 	}
+	void operator=(const Stack& Obj) {
+		Node* temp = Obj.top;
+		Stack Stk;
+		while (temp != NULL) {
+			Stk.push(temp->data);
+			temp = temp->next;
+		}
+		while (!Stk.isEmpty()) {
+			this->push(Stk.peek());
+			Stk.pop();
+		}
+	}
 };
+

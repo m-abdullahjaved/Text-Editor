@@ -8,9 +8,20 @@
 
 using namespace std;
 
+void welcome();
+void mainMenu(); // For Display Menu
 void openFile(); // For Opening Existing File
 void newFile(); // For Creating New File
 void editFile(String&); // For edting Text in File
+
+void welcome() {
+	cout << "\n\n\n\n\n\n\t\t\t\t";
+	cout << setw(30) << setfill('*') << " ";
+	cout << "\n\n\t\t\t\t" << setw(3) << setfill(' ') << " ";
+	cout << "STACK BASED TEXT EDITOR\n\n\t\t\t\t";
+	cout << setfill('*') << setw(30) << " " << endl;
+	Sleep(2000);
+}
 
 void mainMenu() {
 	int choice = 0;
@@ -80,8 +91,10 @@ void newFile() {
 
 void editFile(String& Paragraph) {
 	Stack undo;
-	Stack temp;
-	
+	Stack redo;
+	Stack backMove;
+	Stack tempPrint; // For printing text on console
+
 	// **** This will run in case of existing file **** //
 	Node* current = Paragraph.head;
 	for (int i = 0; i < Paragraph.getSize(); i++) {
@@ -93,21 +106,31 @@ void editFile(String& Paragraph) {
 
 	char ch;
 	while (true) {
-		ch = getch();
+		ch = _getch();
 		if (ch == 26 || ch == 8) { // undo
 			if (!undo.isEmpty()) {
-				temp.push(undo.peek());
+				redo.push(undo.peek());
 				undo.pop();
 				Paragraph.deleteLast();
 				cout << "\b \b";
 			}
 		}
+		else if (ch == -32) { // move back
+			cout << "\b";
+			ch = _getch();
+			if (!undo.isEmpty()) {
+				backMove.push(undo.peek());
+			//	tempPrint.push(undo.peek());
+				undo.pop();
+				Paragraph.deleteLast();
+			}
+		}
 		else if (ch == 25) { // redo
-			if (!temp.isEmpty()) {
-				cout << temp.peek();
-				Paragraph.insertLast(temp.peek());
-				undo.push(temp.peek());
-				temp.pop();
+			if (!redo.isEmpty()) {
+				cout << redo.peek();
+				Paragraph.insertLast(redo.peek());
+				undo.push(redo.peek());
+				redo.pop();
 			}
 		}
 		else if (ch == 13 || ch == 19) {
@@ -117,12 +140,33 @@ void editFile(String& Paragraph) {
 			cout << ch;
 			Paragraph.insertLast(ch);
 			undo.push(ch);
+
+			tempPrint = backMove;
+
+			while (!tempPrint.isEmpty()) {
+				cout << tempPrint.peek();
+				tempPrint.pop();
+			}
+
+			// Again start from backMove to move the cursor back
+			tempPrint = backMove;
+
+			while (!tempPrint.isEmpty()) {
+				cout << "\b";
+				tempPrint.pop();
+			}
 		}
+	}
+	while (!backMove.isEmpty()) {
+		Paragraph.insertLast(backMove.peek());
+		undo.push(backMove.peek());
+		backMove.pop();
 	}
 }
 
 int main() {
 	system("Color 70");
+	//welcome();
 	mainMenu();
 	return 0;
 }
