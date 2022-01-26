@@ -212,7 +212,7 @@ void editFile(String& Paragraph) {
 
 int main() {
 	system("Color 70");
-	//welcome();
+	welcome();
 	mainMenu();
 	return 0;
 }
