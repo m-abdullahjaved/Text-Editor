@@ -112,17 +112,48 @@ void editFile(String& Paragraph) {
 				redo.push(undo.peek());
 				undo.pop();
 				Paragraph.deleteLast();
+
+				tempPrint = backMove;
+				while (!tempPrint.isEmpty()) {
+					cout << " ";
+					tempPrint.pop();
+				}
+
+				tempPrint = backMove;
+				while (!tempPrint.isEmpty()) {
+					cout << "\b";
+					tempPrint.pop();
+				}
 				cout << "\b \b";
+				tempPrint = backMove;
+				while (!tempPrint.isEmpty()) {
+					cout << tempPrint.peek();
+					tempPrint.pop();
+				}
+				tempPrint = backMove;
+				while (!tempPrint.isEmpty()) {
+					cout << "\b";
+					tempPrint.pop();
+				}
 			}
 		}
-		else if (ch == -32) { // move back
-			cout << "\b";
+		else if (ch == -32) { // forward / backward
 			ch = _getch();
-			if (!undo.isEmpty()) {
-				backMove.push(undo.peek());
-			//	tempPrint.push(undo.peek());
-				undo.pop();
-				Paragraph.deleteLast();
+			if (ch == 'K') {
+				if (!undo.isEmpty()) {
+					cout << "\b";
+					backMove.push(undo.peek());
+					undo.pop();
+					Paragraph.deleteLast();
+				}
+			}
+			else if (ch == 'M') {
+				if (!backMove.isEmpty()) {
+					undo.push(backMove.peek());
+					Paragraph.insertLast(backMove.peek());
+					cout << backMove.peek();
+					backMove.pop();
+				}
 			}
 		}
 		else if (ch == 25) { // redo
@@ -131,6 +162,21 @@ void editFile(String& Paragraph) {
 				Paragraph.insertLast(redo.peek());
 				undo.push(redo.peek());
 				redo.pop();
+
+				tempPrint = backMove;
+
+				while (!tempPrint.isEmpty()) {
+					cout << tempPrint.peek();
+					tempPrint.pop();
+				}
+
+				// Again start from backMove to move the cursor back
+				tempPrint = backMove;
+
+				while (!tempPrint.isEmpty()) {
+					cout << "\b";
+					tempPrint.pop();
+				}
 			}
 		}
 		else if (ch == 13 || ch == 19) {
@@ -166,7 +212,7 @@ void editFile(String& Paragraph) {
 
 int main() {
 	system("Color 70");
-	welcome();
+	//welcome();
 	mainMenu();
 	return 0;
 }
