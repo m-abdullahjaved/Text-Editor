@@ -179,7 +179,14 @@ void editFile(String& Paragraph) {
 				}
 			}
 		}
-		else if (ch == 13 || ch == 19) {
+		
+		else if (ch == 13) { // Enter 
+			cout << "\n";
+			Paragraph.insertLast('\n');
+			undo.push('\n');
+		}
+
+		else if (ch == 19) { // Ctrl + S
 			break;
 		}
 		else {
